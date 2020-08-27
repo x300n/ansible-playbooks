@@ -1,0 +1,42 @@
+---
+#ahmed.gaberym@gmail.com
+#Create a playbook that uses the vault file to achieve the following:
+
+#    Users whose user ID starts with 1 should be created on servers in the webservers host group. User password should be used from the user_password variable.
+#    Users whose user ID starts with 2 should be created on servers in the database host group. User password should be used from the user_password variable.
+#    All users should be members of a supplementary group wheel.
+#    Shell should be set to /bin/bash for all users.
+#    Account passwords should use the SHA512 hash format.
+#    Each user should have an SSH key uploaded 
+
+#After running the playbook, users should be able to SSH into their respective servers without passwords.
+
+
+- hosts: all
+  become: yes
+  vars_files:
+          - secret.yml
+          - user_list.yml
+
+  tasks:
+          - name: User Creation
+            user:
+                    name: "{{ item.username }}"
+                    password: "{{ user_password | password_hash('sha512') }}"
+                    uid: "{{ item.uid }}"
+                    groups: wheel
+                    append: yes
+                    shell: /bin/bash
+            with_items: "{{ users }}"
+            when: ('webservers' in group_names and item.uid|string|first == '1') or ('database' in group_names and item.uid|string|first == '2')
+
+          - name: Deploy SSH keys
+            authorized_key:
+                    user: "{{ item.username }}"
+                    state: present
+                    key: "{{ lookup('file', '/home/automation/.ssh/id_rsa.pub') }}"
+            with_items: "{{ users }}"
+            when: ('webservers' in group_names and item.uid|string|first == '1') or ('database' in group_names and item.uid|string|first == '2')
+
+
+                

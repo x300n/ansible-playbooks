@@ -1,0 +1,24 @@
+---
+#ahmed.gaberym@gmail.com
+#Installs tcpdump and mailx packages on hosts in the proxy host groups.
+#Installs lsof and mailx and packages on hosts in the database host groups
+
+- hosts: all
+  become: yes
+  tasks:
+
+          - name: Install packages tcpdump, mailx
+            yum:
+                    name: 
+                                - tcpdump
+                                - mailx
+                    state: present
+            when: '"proxy" in group_names'
+
+          - name: Install packages lsof, mailx
+            yum:
+                    name:
+                                - lsof
+                                - mailx
+                    state: present
+            when: '"database" in group_names'

@@ -1,0 +1,15 @@
+---
+#ahmed.gaberym@gmail.com
+#Create a playbook that runs on servers in the proxy host group and does the following:
+#   A root crontab record is created that runs every hour.
+#   The cron job appends the file /var/log/time.log with the output from the date command.
+
+- hosts: proxy
+  become: yes
+  tasks:
+          - name: Cron Job
+            cron:
+                    name: "Log date"
+                    job: "$(date) >> /var/log/time.log"
+                    hour: "*/1"
+

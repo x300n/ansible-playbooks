@@ -1,0 +1,11 @@
+---
+#ahmed.gaberym@gmail.com
+#
+#
+
+- hosts: webservers
+  become: yes
+  tasks:
+
+          - name: Set the default boot target to multi.user
+            command: systemctl set-default multi-user.target

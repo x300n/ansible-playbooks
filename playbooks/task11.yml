@@ -1,0 +1,18 @@
+---
+
+- hosts: proxy
+  become: yes
+  roles:
+          - geerlingguy.haproxy
+  tasks:
+          - name: Configure firewall
+            firewalld:
+                    port: 80/tcp
+                    state: enabled
+                    permanent: yes
+          - name: Restart firewalld
+            service:
+                    name: firewalld
+                    state: restarted
+
+

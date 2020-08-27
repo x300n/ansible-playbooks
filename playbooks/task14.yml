@@ -1,0 +1,19 @@
+---
+#ahmed.gaberym@gmail.com
+#    A file /mnt/mysql_backups/database_list.txt is created that contains the following line: dev,test,qa,prod.
+#    A gzip archive of the file /mnt/mysql_backups/database_list.txt is created and stored in /mnt/mysql_backups/archive.gz.
+
+- hosts: database
+  become: yes
+  tasks:
+          - name: Create file
+            lineinfile:
+                    path: /mnt/mysql_backups/database_list.txt
+                    line: "dev,test,qa,prod"
+                    create: yes
+
+          - name: archive the file
+            archive:
+                    path: /mnt/mysql_backups/database_list.txt
+                    dest: /mnt/mysql_backups/archive.gz
+                    format: gz

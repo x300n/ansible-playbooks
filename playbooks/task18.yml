@@ -1,0 +1,22 @@
+---
+#ahmed.gaberym@gmail.com
+
+- hosts: database
+  become: yes
+  tasks:
+
+          - name: Configure a template on the target node
+            template:
+                    src: server_list.j2
+                    dest: /etc/server_list.txt
+                    owner: automation
+                    mode: 0600
+
+          - name: Configure selinux file label on the file
+            sefcontext:
+                    target: /etc/server_list.txt
+                    setype: net_conf_t
+                    state: present
+
+          - name: Apply file context
+            command: restorecon -irv /etc/server_list.txt

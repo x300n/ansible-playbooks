@@ -1,0 +1,25 @@
+---
+#ahmed.gaberym@gmail.com
+#Create a playbook /home/automation/plays/selinux.yml that runs on hosts in the webservers host group and does the following:
+
+#           Uses the selinux RHEL system role.
+#                Enables httpd_can_network_connect SELinux boolean.
+#                    The change must survive system reboot
+
+- hosts: webservers
+  become: yes
+  tasks:
+          - name: Ensure selinux is in enforcing mode
+            selinux:
+                    policy: targeted
+                    state: enforcing
+
+          - name: Enable boolean
+            seboolean:
+                    name: httpd_can_network_connect
+                    state: yes
+                    persistent: yes
+
+
+
+

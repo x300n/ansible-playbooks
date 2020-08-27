@@ -1,0 +1,48 @@
+---
+- name: Disable mysql 8 module
+  command: yum module disable mysql -y
+  warn: false
+
+- name: Install MySQL Community Server
+  yum:
+          name: mysql-community-server
+          state: present
+
+- name: Start and enable MySQL
+  service:
+          name: mysqld
+          state: started
+          enabled: yes
+
+- name: Configure firewall
+  firewalld:
+          port: 3306/tcp
+          state: enabled
+          permanent: yes
+- name: Restart firewall
+  service:
+          name: firewalld
+          state: restarted
+
+- name: Configure MySQL root user
+  mysql_user:
+          name: root
+          password: "{{ database_password }}"
+
+- name: Configure my.cnf template
+  template:
+          src: my.cnf.j2
+          dest: /etc/my.cnf
+
+- name: Configure client.my.cnf.j2
+  template:
+          src: client.my.cnf.j2
+          dest: /root/.my.cnf
+          owner: root
+          group: root
+          mode: 0600
+          
+- name: Restart mysqld
+  service: 
+          name: mysqld
+          state: restarted

@@ -1,0 +1,34 @@
+---
+#ahmed.gaberym@gmail.com
+#Create a playbook that runs on all inventory hosts and does the following:
+
+#    The playbook should replace any existing content of /etc/motd with text. Text depends on the host group.
+#    On hosts in the proxy host group the line should be “Welcome to HAProxy server”.
+#    On hosts in the webserver host group the line should be “Welcome to Apache server”.
+#    On hosts in the database host group the line should be “Welcome to MySQL server”.
+
+
+
+
+- hosts: all
+  become: yes
+  tasks:
+          - name: Configure motd on proxy host group
+            lineinfile: 
+                        path: /etc/motd
+                        line: "Welcome to HAProxy server"
+            when: '"proxy" in group_names'
+
+          - name: Configure motd on Apache host group
+            lineinfile: 
+                        path: /etc/motd
+                        line: "Welcome to Apache server"
+            when: '"webservers" in group_names'
+
+          - name: Configure motd on MySQL host group
+            lineinfile: 
+                        path: /etc/motd
+                        line: "Welcome to MySQL server"
+            when: '"database" in group_names'
+
+               

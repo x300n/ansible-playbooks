@@ -1,0 +1,36 @@
+---
+#ahmed.gaberym@gmail.com
+#Create a playbook that runs on all inventory hosts and configures SSHD daemon as follows:
+
+#    banner is set to /etc/motd
+#    X11Forwarding is disabled
+#    MaxAuthTries is set to 3
+
+- hosts: all
+  become: yes
+  tasks:
+          - name: Configure Banner
+            lineinfile:
+                    path: /etc/ssh/sshd_config
+                    regex: "^Banner "
+                    line: "Banner /etc/motd"
+
+          - name: Configure X11Forwarding
+            lineinfile:
+                    path: /etc/ssh/sshd_config
+                    regex: "^X11Forwarding "
+                    insertafter: "^#X11Forwarding "
+                    line: "X11Forwarding no"
+
+          - name: Configure MaxAuthTries
+            lineinfile:
+                    path: /etc/ssh/sshd_config
+                    regex: "^MaxAuthTries "
+                    insertafter: "^#MaxAuthTries "
+                    line: "MaxAuthTries 3"
+
+
+          - name: Restart sshd
+            service: 
+                    name: sshd
+                    state: restarted

@@ -1,0 +1,20 @@
+---
+
+#ahmed.gaberym@gmail.com
+#Custom facts are read from /etc/ansible/facts.d/*.fact on the managed nodes and can be retrieved from ansible_local using the setup module
+#First we created a fact in JSON format and will deploy on the designated folder
+
+
+- hosts: database
+  become: yes
+  tasks:
+          - name: Ensure facts.d exists
+            file:
+                    path: /etc/ansible/facts.d
+                    state: directory
+
+          - name: Copy the .fact file onto facts.d
+            copy:
+                    src: custom.sample_exam.fact
+                    dest: /etc/ansible/facts.d/custom.sample_exam.fact
+

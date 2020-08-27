@@ -1,0 +1,36 @@
+---
+- name: Install packages
+  yum:
+          name: 
+                - httpd
+                - mod_ssl
+                - php
+          state: present
+
+- name: Restart and enable httpd on boot
+  service:
+          name: httpd
+          state: started
+          enabled: yes
+
+
+- name: Configure firewall
+  firewalld:
+          service: "{{ item }}"
+          state: enabled
+          permanent: yes
+  loop:
+          - http
+          - https
+- name: Restart firewalld
+  service:
+          name: firewalld
+          state: restarted
+
+- name: Configure index.html
+  template:
+          src: index.html.j2
+          dest: /var/www/html/index.html
+  notify: restartapache
+
+
