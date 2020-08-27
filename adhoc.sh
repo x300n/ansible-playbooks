@@ -1,8 +1,8 @@
 #ahmed.gaberym@gmail.com
 
 #!/bin/bash
-
 #automate ssh key deployment on managed hosts without prompt
+
 for i in {2..5};
 do 
 	sshpass -f pass ssh-copy-id root@ansible$i.hl.local -o StrictHostKeyChecking=no
