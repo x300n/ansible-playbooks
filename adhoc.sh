@@ -15,7 +15,7 @@ ansible all -m file -a "path=/home/automation/.ssh state=directory" -u root
 ansible all -m authorized_key -a "user=automation state=present key={{ lookup('file', '/home/automation/.ssh/id_rsa.pub') }}" -u root
 ansible all -m lineinfile -a "path=/etc/sudoers line='automation ALL=(ALL) NOPASSWD: ALL'" -u root
 
-#Install Dependancies
+#Install Dependanciess
 ansible all -m raw -a "yum install platform-python policycoreutils-python-utils python3-pip -y" -u root
 ansible database -m raw -a "pip3 install pymysql" -u root
 ansible all -m copy -a "src=/etc/hosts dest=/etc/hosts" -u root
