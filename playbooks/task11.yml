@@ -1,5 +1,4 @@
 ---
-
 - hosts: proxy
   become: yes
   roles:
